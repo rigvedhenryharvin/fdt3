@@ -31,23 +31,23 @@ async def handler(files: List[UploadFile] = File(...)):
     if not files:
         raise HTTPException(status_code=400, detail="No files were provided")
 
-    # For each file, let's store the results in a list of dictionaries.
+    
     results = []
 
     for file in files:
-        # Create a temporary file.
+        
         with NamedTemporaryFile(delete=True) as temp:
-            # Write the user's uploaded file to the temporary file.
+            
             with open(temp.name, "wb") as temp_file:
                 temp_file.write(file.file.read())
             
-            # Let's get the transcript of the temporary file.
+            
             result = model.transcribe(temp.name)
 
-            # Detect fraud in the transcript
+            
             is_fraud, detected_keywords = detect_fraud(result['text'])
 
-            # Now we can store the result object for this file.
+            
             results.append({
                 'filename': file.filename,
                 'transcript': result['text'],
